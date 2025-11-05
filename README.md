@@ -1,2 +1,0 @@
-# payy
-Fast and smooth 

