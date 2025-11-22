@@ -1,241 +1,231 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Crypto Wallet Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Withdrawal Release Certificate — SAMPLE</title>
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      background: #0f0f0f;
-      color: #fff;
+    :root{
+      --accent:#f6c94d;
+      --muted:#8c8c8c;
+      --green:#2fb86f;
+      --danger:#e94b4b;
+      --bg:#ffffff;
+      --border:#f7e7b2;
+      --card-shadow: 0 8px 30px rgba(0,0,0,0.06);
+      --font-sans: "Helvetica Neue", Arial, sans-serif;
     }
-    .container {
-      max-width: 420px;
-      margin: auto;
-      padding: 20px;
+
+    html,body{
+      height:100%;
+      margin:0;
+      background:linear-gradient(180deg,#f8f9fb 0%, #ffffff 100%);
+      font-family:var(--font-sans);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      color:#121212;
     }
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
+
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:40px 20px;
+      box-sizing:border-box;
     }
-    .wallet-card {
-      background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      margin-bottom: 20px;
+
+    .card{
+      width:100%;
+      max-width:980px;
+      background:var(--bg);
+      border-radius:18px;
+      border:6px solid var(--border);
+      box-shadow:var(--card-shadow);
+      padding:48px 56px;
+      box-sizing:border-box;
     }
-    .wallet-card h2 {
-      margin: 0;
-      font-size: 18px;
-      color: #00ffc8;
+
+    header{
+      text-align:center;
+      margin-bottom:26px;
     }
-    .wallet-card p {
-      margin: 5px 0;
-      font-size: 14px;
-      color: #ccc;
+
+    .brand{
+      font-weight:700;
+      color:var(--accent);
+      letter-spacing:1px;
+      font-size:13px;
     }
-    .balance {
-      font-size: 26px;
-      font-weight: bold;
-      margin-top: 10px;
+
+    h1{
+      margin:8px 0 6px;
+      font-size:20px;
+      letter-spacing:0.2px;
     }
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      margin: 10px 0;
-      background: #00ffc8;
-      color: #000;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background 0.3s ease;
+
+    .subtitle{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:18px;
     }
-    .btn:disabled {
-      background: #444;
-      color: #aaa;
-      cursor: not-allowed;
+
+    .status{
+      display:inline-block;
+      padding:6px 12px;
+      border-radius:999px;
+      background:#eaf9ef;
+      color:var(--green);
+      font-weight:700;
+      font-size:13px;
+      margin-bottom:22px;
     }
-    .modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
+
+    .amount{
+      font-size:48px;
+      font-weight:800;
+      margin:10px 0 6px;
+      text-align:center;
     }
-    .modal-content {
-      background: #1e1e1e;
-      padding: 25px;
-      border-radius: 12px;
-      text-align: center;
-      max-width: 320px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      animation: fadeIn 0.4s ease;
+
+    .details{
+      max-width:640px;
+      margin:18px auto 26px;
+      text-align:center;
+      color:#39b77c;
+      font-weight:700;
+      line-height:1.6;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    .small-lines{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:14px;
     }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 8px;
-      border: none;
-      background: #2a2a2a;
-      color: #fff;
+
+    .confirm {
+      margin-top:10px;
+      font-size:15px;
+      color:var(--danger);
+      font-weight:700;
     }
-    .stage {
-      margin: 10px 0;
-      font-weight: bold;
-      color: #00ffc8;
+
+    .info-grid{
+      display:flex;
+      justify-content:center;
+      gap:36px;
+      align-items:flex-start;
+      margin-top:18px;
+      flex-wrap:wrap;
     }
-    .completed {
-      color: red;
+
+    .info{
+      text-align:center;
+      min-width:220px;
+    }
+
+    .info .label{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:6px;
+    }
+
+    .info .value{
+      font-size:18px;
+      font-weight:700;
+    }
+
+    .receiver{
+      margin-top:26px;
+      text-align:center;
+      font-size:15px;
+      color:#333;
+    }
+
+    footer{
+      border-top:1px dashed #eee;
+      margin-top:30px;
+      padding-top:18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .permanent{
+      color:var(--muted);
+      font-size:13px;
+      text-align:left;
+    }
+
+    .disclaimer{
+      color:#7b7b7b;
+      font-size:12px;
+      text-align:right;
+      max-width:420px;
+    }
+
+    /* Responsive */
+    @media (max-width:640px){
+      .card{ padding:28px 18px; border-radius:14px; }
+      .amount{ font-size:36px; }
+      .info-grid{ gap:18px; }
+      footer{ flex-direction:column; align-items:flex-start; gap:8px; }
+      .disclaimer{ text-align:left; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h2 id="greeting">Welcome!</h2>
-    </div>
+  <div class="wrap">
+    <div class="card" role="document" aria-label="withdrawal release certificate">
+      <header>
+        <div class="brand">CERTIFICATE</div>
+        <h1>Withdrawal Release Certificate</
+        <div class="subtitle">.</div>
+        <div class="status" aria-hidden="true">VERIFIED</div>
+      </header>
 
-    <div class="wallet-card">
-      <h2>Crypto Wallet</h2>
-      <p>Wallet ID: 5371 51xx xxxx 3036</p>
-      <div class="balance" id="balance">€0.00</div>
-    </div>
+      <main>
+        <div class="amount" aria-live="polite">$10,000 <span style="font-size:18px; font-weight:600;">USDT</span></div>
 
-    <button class="btn" onclick="startRecovery()">Start Recovery</button>
-    <button class="btn" onclick="showBlocked()" id="sendBtn" disabled>Send</button>
-    <button class="btn" onclick="showBlocked()" id="transferBtn" disabled>Transfer</button>
-    <button class="btn" onclick="showBlocked()" id="billBtn" disabled>Pay Bills</button>
-    <button class="btn" onclick="startWithdrawal()" id="withdrawBtn" disabled>Withdraw BTC</button>
+        <div class="details">
+          Receiver: <strong>Hdkm1991@gmail.com</strong>
+          <div class="small-lines">Amount required for final confirmation: <span class="confirm">$38</span></div>
+        </div>
+
+        <div class="info-grid" role="group" aria-label="Transaction details">
+          <div class="info">
+            <div class="label">Status</div>
+            <div class="value" style="color:var(--green)">Approved</div>
+          </div>
+          <div class="info">
+            <div class="label">Release Type</div>
+            <div class="value">Instant Release</div>
+          </div>
+          <div class="info">
+            <div class="label">Network</div>
+            <div class="value">USDT (TRC20)</div>
+          </div>
+        </div>
+
+        <div class="receiver" aria-hidden="false">
+          Permanent Release Amount: <strong>$10,000 USDT</strong>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px;">Transaction reference: 0x1234...abcd</div>
+        </div>
+      </main>
+
+      <footer>
+        <div class="permanent">
+          <strong>Document Type:</strong> Valid<br/>
+          <strong>Issued to:</strong> Hdkm1991@gmail.com
+        </div>
+
+        <div class="disclaimer">
+          This document is Verified
+        </div>
+      </footer>
+    </div>
   </div>
-
-  <!-- Spinner Modal -->
-  <div class="modal" id="spinnerModal">
-    <div class="modal-content">
-      <p>🔄 Processing recovery...</p>
-    </div>
-  </div>
-
-  <!-- Registration Form -->
-  <div class="modal" id="formModal">
-    <div class="modal-content">
-      <h3>User Registration</h3>
-      <input type="text" id="fullName" placeholder="Full Name" required />
-      <input type="email" id="email" placeholder="Email" required />
-      <input type="text" id="btcAddress" placeholder="BTC Address" required />
-      <button class="btn" onclick="completeRegistration()">Confirm</button>
-    </div>
-  </div>
-
-  <!-- Withdrawal Modal -->
-  <div class="modal" id="withdrawModal">
-    <div class="modal-content">
-      <h3>BTC Withdrawal</h3>
-      <input type="text" id="withdrawAddress" placeholder="BTC Address" />
-      <input type="number" id="withdrawAmount" placeholder="Amount (€)" />
-      <button class="btn" onclick="processWithdrawal()">Send</button>
-      <div id="stages"></div>
-    </div>
-  </div>
-
-  <script>
-    const greeting = document.getElementById('greeting');
-    const balance = document.getElementById('balance');
-    const spinnerModal = document.getElementById('spinnerModal');
-    const formModal = document.getElementById('formModal');
-    const withdrawModal = document.getElementById('withdrawModal');
-    const stages = document.getElementById('stages');
-
-    const sendBtn = document.getElementById('sendBtn');
-    const transferBtn = document.getElementById('transferBtn');
-    const billBtn = document.getElementById('billBtn');
-    const withdrawBtn = document.getElementById('withdrawBtn');
-
-    function startRecovery() {
-      spinnerModal.style.display = 'flex';
-      setTimeout(() => {
-        spinnerModal.style.display = 'none';
-        formModal.style.display = 'flex';
-      }, 5000);
-    }
-
-    function completeRegistration() {
-      const name = document.getElementById('fullName').value;
-      const email = document.getElementById('email').value;
-      const btc = document.getElementById('btcAddress').value;
-
-      if (name && email && btc) {
-        localStorage.setItem('userName', name);
-        greeting.textContent = `Welcome, ${name}!`;
-        balance.textContent = '€24,000.00';
-        formModal.style.display = 'none';
-
-        sendBtn.disabled = true;
-        transferBtn.disabled = true;
-        billBtn.disabled = true;
-        withdrawBtn.disabled = false;
-      }
-    }
-
-    function showBlocked() {
-      alert('⚠️ Complete your recovery process to activate this feature.');
-    }
-
-    function startWithdrawal() {
-      withdrawModal.style.display = 'flex';
-    }
-
-    function processWithdrawal() {
-      const address = document.getElementById('withdrawAddress').value;
-      const amount = parseFloat(document.getElementById('withdrawAmount').value);
-
-      if (!address || isNaN(amount) || amount < 10000) {
-        alert('⚠️ Minimum withdrawal amount is €10,000.');
-        return;
-      }
-
-      stages.innerHTML = '';
-      const steps = ['Started', 'Processing', 'Arriving', 'Completed'];
-      steps.forEach((step, i) => {
-        setTimeout(() => {
-          const div = document.createElement('div');
-          div.className = 'stage';
-          div.textContent = step;
-          if (step === 'Completed') {
-            div.classList.add('completed');
-            const verify = document.createElement('div');
-            verify.innerHTML = '<p>⚠️ €300 required for full recovery verification to receive payment.</p>';
-            stages.appendChild(verify);
-          }
-          stages.appendChild(div);
-        }, i * 2000);
-      });
-    }
-
-    window.onload = () => {
-      const name = localStorage.getItem('userName');
-      if (name) {
-        greeting.textContent = `Welcome, ${name}!`;
-        balance.textContent = '€24,000.00';
-        sendBtn.disabled = true;
-        transferBtn.disabled = true;
-        billBtn.disabled = true;
-        withdrawBtn.disabled = false;
-      }
-    };
-  </script>
 </body>
 </html>
